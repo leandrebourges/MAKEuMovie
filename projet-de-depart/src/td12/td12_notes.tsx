@@ -1,6 +1,7 @@
 // Ajout de "app.use(express.json());" dans index.ts
 // Ajout de "app.post('/api/films', (request, response) => {...});" dans index.ts
-
+//Ajout de td12.tsx
+//Ajout dans Menu.tsx import (au début) et de l'id (dans const pages)
 
 // Eh ! Pourquoi tu lis ça ?? C'est mes notes pas les tiennes !
 // Nan en vrai force chef <3

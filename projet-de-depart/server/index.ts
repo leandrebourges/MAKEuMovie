@@ -62,6 +62,48 @@ app.post('/api/films', (request, response) => {
 });
 
 
+app.patch('/api/films/:id', (request, response) => {
+    const id = Number(request.params.id);
+
+    if (!Number.isInteger(id)) {
+        return response.status(400).json({ error: 'Identifiant invalide.' });
+    }
+
+    const film = filmsAvecStatut.find((film) => film.id === id);
+
+    if (!film) {
+        return response.status(404).json({ error: 'Film introuvable.' });
+    }
+
+    const { seen } = request.body;
+
+    if (typeof seen !== 'boolean') {
+        return response.status(400).json({ error: 'Le statut vu doit être vrai ou faux.' });
+    }
+
+    film.seen = seen;
+    response.json(film);
+});
+
+
+app.delete('/api/films/:id', (request, response) => {
+    const id = Number(request.params.id);
+
+    if (!Number.isInteger(id)) {
+        return response.status(400).json({ error: 'Identifiant invalide.' });
+    }
+
+    const index = filmsAvecStatut.findIndex((film) => film.id === id);
+
+    if (index === -1) {
+        return response.status(404).json({ error: 'Film introuvable.' });
+    }
+
+    filmsAvecStatut.splice(index, 1);
+    response.status(204).end();
+});
+
+
 app.listen(3000, () => {
     console.log('Serveur disponible sur http://localhost:3000/api/films');
 });

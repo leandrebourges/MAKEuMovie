@@ -8,6 +8,8 @@ import { Td5 } from './td5-recherche/Td5';
 import { Td6 } from './td6-minuteur/Td6';
 import { Td7 } from './td7-affiches/Td7';
 import { Td7 as Td7PlusLoin } from './td7-affiches/Td7-plus-loin';
+import { Td12 } from './td12/td12';
+import { Td13 } from './td13/td13';
 
 const pages = [
   { id: 'td1', label: 'TD 1 · Fiche', Page: Td1 },
@@ -18,6 +20,8 @@ const pages = [
   { id: 'td6', label: 'TD 6 · Minuteur', Page: Td6 },
   { id: 'td7', label: 'TD 7 · Affiches', Page: Td7 },
   { id: 'td7plus', label: 'TD 7 · Plus loin', Page: Td7PlusLoin },
+  { id: 'td12', label: 'TD 12 · Ajouter un film', Page: Td12 },
+  { id: 'td13', label: 'TD 13 · Vu, ou supprimé', Page: Td13 },
 ];
 
 export function Menu() {
