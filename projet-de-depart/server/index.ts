@@ -1,6 +1,6 @@
 import express from "express";
-import { films } from '../src/donnees/films.ts';
-
+import { films, type Movie } from '../src/donnees/films.ts';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 //creer une instance de l'application express
 const app = express();
@@ -9,12 +9,30 @@ const app = express();
 app.use(express.json());
 
 
-//parcours l'ancienne liste et cree une nouvelle avec un statut "seen" initialisé à false
-const filmsAvecStatut = films.map((film) => ({
+const dataFile = new URL('./films.json', import.meta.url);
+
+type ServerMovie = Movie & { seen: boolean };
+
+const startingMovies: ServerMovie[] = films.map((film) => ({
     ...film,
     seen: false,
 }));
 
+function loadFilms(): ServerMovie[] {
+    if (existsSync(dataFile)) {
+        const content = readFileSync(dataFile, 'utf8');
+        return JSON.parse(content) as ServerMovie[];
+    }
+
+    writeFileSync(dataFile, JSON.stringify(startingMovies, null, 2) + '\n', 'utf8');
+    return startingMovies;
+}
+
+const filmsAvecStatut = loadFilms();
+
+function saveFilms(): void {
+    writeFileSync(dataFile, JSON.stringify(filmsAvecStatut, null, 2) + '\n', 'utf8');
+}
 
 app.get('/api/films', (_request, response) => {
     response.json(filmsAvecStatut);
@@ -58,6 +76,7 @@ app.post('/api/films', (request, response) => {
     };
 
     filmsAvecStatut.push(film);
+    saveFilms();
     response.status(201).json(film);
 });
 
@@ -82,6 +101,7 @@ app.patch('/api/films/:id', (request, response) => {
     }
 
     film.seen = seen;
+    saveFilms();
     response.json(film);
 });
 
@@ -100,6 +120,7 @@ app.delete('/api/films/:id', (request, response) => {
     }
 
     filmsAvecStatut.splice(index, 1);
+    saveFilms();
     response.status(204).end();
 });
 
